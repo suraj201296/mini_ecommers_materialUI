@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthForm from "./components/auth/AuthForm";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Navbar from "./components/Navbar";
+import { useState} from 'react'
 import './App.css';
+import Products from "./pages/Products";
+import About from "./pages/About";
 
 function App() {
+  
+  const [ isAuth, setIsAuth ] = useState(localStorage.getItem('token') ? true : false);
+
+  const handleLogin = () => {
+    setIsAuth(true);
+  }
+
+  const handleLogout = () => {
+    setIsAuth(false);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      {isAuth && <Navbar onLogout={handleLogout}/>}
+      <Routes>
+        <Route path="/login" element={<AuthForm onLogin={handleLogin}/>}/>
+        <Route element={<ProtectedRoute/>} >
+            <Route path="/" element={<Dashboard/>}/>
+            <Route path="/products" element={<Products/>}/>
+            <Route path="/about" element={<About/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
