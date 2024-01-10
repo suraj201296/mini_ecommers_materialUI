@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import { useState} from 'react'
 import './App.css';
 import Products from "./pages/Products";
-import About from "./pages/About";
+import Users from "./pages/Users";
 
 function App() {
   
@@ -27,8 +27,8 @@ function App() {
         <Route path="/login" element={<AuthForm onLogin={handleLogin}/>}/>
         <Route element={<ProtectedRoute/>} >
             <Route path="/" element={<Dashboard/>}/>
-            <Route path="/products" element={<Products/>}/>
-            <Route path="/about" element={<About/>}/>
+            <Route path="/clothes" element={<Products/>}/>
+            <Route path="/users" element={<Users/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

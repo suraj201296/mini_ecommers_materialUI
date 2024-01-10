@@ -1,28 +1,60 @@
-import { useState , useEffect} from 'react'
-import { useLocation } from 'react-router-dom'
+import { Box, Button, Grid, TextField } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../state/hooks';
+import { getAllProducts } from '../slices/productSlice';
+import ProductCard from '../components/products/ProductCard';
+import SearchInput from '../components/FormComponents/SearchInput';
 
-type userType = {
-    state : {
-        name : string
-    }
-}
+export type productType = {
+  id : number,
+  brand : string,
+  category : string,
+  image : string,
+  description : string,
+  ratings : number,
+  price : number,
+};
 
 export default function Dashboard() {
+  const productList = useAppSelector((state) => state.products);
+  const { response } = productList;
+  const dispatch = useAppDispatch();
+  const [user, setUser] = useState();
+  const [products, setProducts] = useState([]);
+  
 
-    const [ user , setUser] = useState();
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser.name);
+      dispatch(getAllProducts());
+    }
+  }, []);
 
-    useEffect(() => {
-        const storedUser = sessionStorage.getItem('user');
-        if(storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser.name);
-        }
-    }, [])
+  useEffect(() => {
+    if (response && response.statusCode === 200) {
+        setProducts(response.data);
+    }
+  }, [response]);
+
+  const handleSearch = (searchItem:  string) => {
+      console.log(searchItem);
+  };
+  
 
   return (
-    <div> 
-        <h3>Dashboard</h3>
-        <span>{user}</span>
-    </div>
-  )
+    <>
+      <Box display={'flex'} justifyContent={'center'} mt={3} alignItems={'center'}>
+        <SearchInput handleSearch={handleSearch}/>
+      </Box>
+      { products &&
+          <Grid container spacing={3} padding={3}>
+              {products.map((product : productType, index) => (
+                  <ProductCard key={index} product={product}/>
+              ))}
+          </Grid>
+      }
+    </>
+  );
 }

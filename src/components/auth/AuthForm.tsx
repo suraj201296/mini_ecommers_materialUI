@@ -2,7 +2,7 @@ import { Box, TextField, Typography, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
-import { loginUser } from '../../slices/userSlice';
+import { loginUser, registerUser } from '../../slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../../state/hooks';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +28,8 @@ export default function AuthForm({onLogin} : propsType) {
     email: '',
     password: '',
   });
-  const [msg, setMsg] = useState<string>();
+  const [errMsg, setErrMsg] = useState<string>();
+  const [successMsg, setSuccessMsg] = useState<string>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
@@ -39,31 +40,45 @@ export default function AuthForm({onLogin} : propsType) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    disaptch(loginUser(form));
+    isSignup ? disaptch(registerUser(form)) : disaptch(loginUser(form)) ;
     console.log(form);
+  };
+
+  const handleIsSignupBtn =()=> {
+    setIsSignup(!isSignup);
     setForm({
       name: '',
       email: '',
       password: '',
     });
-  };
+  }
 
   useEffect(() => {
-    if (response && response.token) {
-      let token = response.token;
-      if (token) {
-        localStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(response.user));
-        // alert("Hello "+userName);
-        onLogin();
-        navigate('/');
+    if (response && response.statusCode == 200) {
+      if(isSignup) {
+        setSuccessMsg(response.message+ " Please Login.");
+        setIsSignup(false);
       } else {
-        alert('Invalid credentials');
+        let token = response.data.token;
+        if (token) {
+          localStorage.setItem('token', token);
+          sessionStorage.setItem('user', JSON.stringify(response.data.user));
+          onLogin();
+          setForm({
+            name: '',
+            email: '',
+            password: '',
+          });
+          navigate('/');
+        } else {
+          setErrMsg(response.message);
+        }
       }
+      
     } else if(response && response.error) { 
-      setMsg(response.message);
+      setErrMsg(response.message);
     } else if(error) {
-      setMsg(error);
+      setErrMsg(error);
     }
   }, [response]);
 
@@ -90,7 +105,8 @@ export default function AuthForm({onLogin} : propsType) {
           <Typography variant='h2' padding={3} textAlign={'center'}>
             {isSignup ? 'Register' : 'Login'}
           </Typography>
-          {msg && <Typography variant="body1" component="span" sx={{ color : 'red' , backgroundColor : '#f5d0ce' , borderRadius: '3px', padding: '10px', width : '50%', display: 'flex',justifyContent: 'center'}}>{msg}</Typography>}
+          {successMsg && <Typography variant="body1" component="span" sx={{ color : 'green' , backgroundColor : '#d5f7e7' , borderRadius: '3px', padding: '10px', width : '50%', display: 'flex',justifyContent: 'center'}}>{successMsg}</Typography>}
+          {errMsg && <Typography variant="body1" component="span" sx={{ color : 'red' , backgroundColor : '#f5d0ce' , borderRadius: '3px', padding: '10px', width : '50%', display: 'flex',justifyContent: 'center'}}>{errMsg}</Typography>}
           {isSignup && (
             <TextField
               name='name'
@@ -131,7 +147,7 @@ export default function AuthForm({onLogin} : propsType) {
           </Button>
           <Button
             sx={{ marginTop: 3, borderRadius: 2 }}
-            onClick={() => setIsSignup(!isSignup)}
+            onClick={handleIsSignupBtn}
           >
             {isSignup
               ? 'Already Register? Login here'

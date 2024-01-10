@@ -1,7 +1,14 @@
-import { useState } from 'react';
-import { AppBar, Toolbar, Box, Button , Typography} from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LogoutIcon from '@mui/icons-material/Logout';
+
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  Typography,
+  Tab,
+  Tabs,
+  Divider,
+} from '@mui/material';
 
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
@@ -15,20 +22,24 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../state/hooks';
 import { logoutUser } from '../slices/userSlice';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 
 type Props = {
   onLogout: () => void;
 };
 
-const pages = ['Home', 'Products', 'Cart','About'];
-const settings = ['Profile','Logout'];
+const pages = ['home', 'clothes', 'shoes', 'sunglasses', 'makeup','users'];
+const settings = ['Profile', 'Logout'];
 
 export default function Navbar({ onLogout }: Props) {
-
   const dispatch = useAppDispatch();
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -51,23 +62,25 @@ export default function Navbar({ onLogout }: Props) {
   };
 
   const handleSetting = (event: React.MouseEvent<HTMLElement>) => {
-    if(event.currentTarget.innerText == "Logout") {
+    if (event.currentTarget.innerText == 'Logout') {
       handleLogout();
     }
-  }
+  };
+
+  // =======================================================================
+
+  // const [activeTab, setActiveTab] = useState();
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" sx={{ backgroundColor : 'darkblue'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          
 
           {/* Big screen logo start */}
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <LocalGroceryStoreIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
-            component="a"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -78,20 +91,20 @@ export default function Navbar({ onLogout }: Props) {
               textDecoration: 'none',
             }}
           >
-            <Link to={"/"} style={{ color : 'white'}}>LOGO</Link>
+            <Link to={"/"} style={{ color : 'white'}}>MiAz</Link>
           </Typography>
           {/* Big screen logo end */}
 
           {/* Big screen menu items start */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Button
-                key={page}
+                key={index}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                <Link style={{ textDecoration : "none" , color : 'white'}} 
-                to={`/${page}`}>
+                <Link style={{ textDecoration : "none" , color : 'white', padding : 2 , textTransform : 'capitalize' }}
+                to={page === 'home' ? '/' : `/${page}`}>
                       {page}
                     </Link>
               </Button>
@@ -129,25 +142,27 @@ export default function Navbar({ onLogout }: Props) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Link  style={{ textDecoration : "none" , color : 'black'}} to={`/${page}`}>
-                      {page}
-                    </Link>
-                  </Typography>
-                </MenuItem>
+              {pages.map((page, index) => (
+                <div key={index}>
+                  <MenuItem onClick={handleCloseNavMenu} sx={{ width : '180px', marginLeft : '20px'}}>
+                    <Typography textAlign="center">
+                      <Link  style={{ textDecoration : "none" , color : 'black' , textTransform : 'capitalize'  }} to={page === 'home' ? '/' : `/${page}`}>
+                        {page}
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                  {index != (pages.length - 1) && <Divider key={`divider-${index}`}/>}
+                </div>
               ))}
             </Menu>
           </Box>
           {/* small screen menu items end */}
 
           {/* small screen icon and logo start */}
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <LocalGroceryStoreIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -159,20 +174,19 @@ export default function Navbar({ onLogout }: Props) {
               textDecoration: 'none',
             }}
           >
-            <Link to={"/"} style={{ color : 'black'}}>LOGO</Link>
+            <Link to={"/"} style={{ color : 'white'}}>MiAz</Link>
           </Typography>
           {/* small screen icon and logo end */}
 
-          
           {/* profile and logout setting button start */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="/images/suraj.jpeg" />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: '45px'}}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -187,8 +201,8 @@ export default function Navbar({ onLogout }: Props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <MenuItem key={index} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">
                     <span onClick={handleSetting}>{setting}</span>
                   </Typography>
@@ -197,13 +211,35 @@ export default function Navbar({ onLogout }: Props) {
             </Menu>
           </Box>
           {/* profile and logout setting button end */}
-          
+
         </Toolbar>
       </Container>
     </AppBar>
-    
+
+    // <AppBar position='sticky' sx={{ backgroundColor: 'transparent' }}>
+    //   <Toolbar>
+    //     <AdbIcon
+    //       sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'black' }}
+    //     />
+    //     <Tabs value={activeTab} onChange={(e, val) => setActiveTab(val)}>
+    //       {pages.map((page, index) => (
+    //         <Tab
+    //           component={Link}
+    //           to={`/${page}`}
+    //           key={index}
+    //           label={page}
+    //           sx={{
+    //             textDecoration: 'none',
+    //             ':hover': {
+    //               textDecoration: 'underline',
+    //               textUnderlineOffset: '18px',
+    //               color: 'grey',
+    //             },
+    //           }}
+    //         ></Tab>
+    //       ))}
+    //     </Tabs>
+    //   </Toolbar>
+    // </AppBar>
   );
 }
-
-
-
