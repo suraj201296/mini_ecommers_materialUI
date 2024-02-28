@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../state/hooks';
 import { useNavigate } from 'react-router-dom';
 
 type FormType = {
-  name: string | null;
+  firstName: string | null;
   email: string;
   password: string;
 };
@@ -24,7 +24,7 @@ export default function AuthForm({onLogin} : propsType) {
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
   const [form, setForm] = useState<FormType>({
-    name: '',
+    firstName: '',
     email: '',
     password: '',
   });
@@ -47,7 +47,7 @@ export default function AuthForm({onLogin} : propsType) {
   const handleIsSignupBtn =()=> {
     setIsSignup(!isSignup);
     setForm({
-      name: '',
+      firstName: '',
       email: '',
       password: '',
     });
@@ -65,7 +65,7 @@ export default function AuthForm({onLogin} : propsType) {
           sessionStorage.setItem('user', JSON.stringify(response.data.user));
           onLogin();
           setForm({
-            name: '',
+            firstName: '',
             email: '',
             password: '',
           });
@@ -109,8 +109,8 @@ export default function AuthForm({onLogin} : propsType) {
           {errMsg && <Typography variant="body1" component="span" sx={{ color : 'red' , backgroundColor : '#f5d0ce' , borderRadius: '3px', padding: '10px', width : '50%', display: 'flex',justifyContent: 'center'}}>{errMsg}</Typography>}
           {isSignup && (
             <TextField
-              name='name'
-              value={form.name}
+              name='firstName'
+              value={form.firstName}
               onChange={handleChange}
               margin='normal'
               type={'text'}

@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, OutlinedInput, useMediaQuery, useTheme } from '@mui/material';
+import { Box, FormControl, InputLabel, OutlinedInput, TextField, useMediaQuery, useTheme } from '@mui/material';
 
 type Props = {
   label: string;
@@ -10,13 +10,13 @@ type Props = {
 
 export default function CustomInput({ label, name, id, value, handleChangeEvent }: Props) {
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const medScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
   return (
     <Box mt={2}>
-      <FormControl sx={{ width : `${fullScreen ? '100%' : '400px'}`}}>
-        <InputLabel htmlFor={id}>{label}</InputLabel>
-        <OutlinedInput name={name} id={id} value={value} label='Name' onChange={handleChangeEvent}/>
+      <FormControl sx={{ width : `${fullScreen ? '100%' : medScreen ? '300px' : '400px'}`}}>
+          <TextField variant="outlined" label={label} name={name} id={id} value={value} onChange={handleChangeEvent}/>
       </FormControl>
     </Box>
   );

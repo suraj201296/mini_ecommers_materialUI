@@ -7,6 +7,9 @@ import { useState} from 'react'
 import './App.css';
 import Products from "./pages/Products";
 import Users from "./pages/Users";
+import ShowProduct from "./pages/ShowProduct";
+import BuyProduct from "./pages/BuyProduct";
+import ViewProfile from "./pages/ViewProfile";
 
 function App() {
   
@@ -29,6 +32,9 @@ function App() {
             <Route path="/" element={<Dashboard/>}/>
             <Route path="/clothes" element={<Products/>}/>
             <Route path="/users" element={<Users/>}/>
+            <Route path="/productDetails/:id" element={<ShowProduct/>}/>
+            <Route path="/buy-product" element={<BuyProduct/>}/>
+            <Route path="/viewProfile" element={<ViewProfile/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

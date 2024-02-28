@@ -11,7 +11,8 @@ import { deleteUser, getUserList } from '../slices/userSlice';
 type Props = {
     user : {
         id : number,
-        name : string,
+        firstName : string,
+        lastName : string,
         email : string,
         status : boolean,
         role : string
@@ -51,7 +52,7 @@ export default function UserDetails({user}: Props) {
         </Box>
         <Box display={'flex'} alignItems="center" justifyContent={'center'}  flexDirection={'column'} mt={2}>
             <Typography variant='h6' sx={{ fontWeight: '600', textTransform: 'capitalize', mb: 1 }}>
-              {user.name}
+              {user.firstName}
             </Typography>
             <Typography sx={{ textTransform: 'capitalize', mb: 1 }}>
               {user.email}

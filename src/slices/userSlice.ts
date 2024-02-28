@@ -80,6 +80,16 @@ export const getUserList = createAsyncThunk('getUserList', async(_, { rejectWith
     }
 })
 
+export const getUserById = createAsyncThunk('getUserById', async( id : number, {rejectWithValue}) => {
+    try {
+        let url = 'http://localhost:8080/api/users/'+id;
+        let response = await axios.get(url,header);
+        return response;
+    } catch (error : any) {
+        return rejectWithValue(error.message);
+    }
+})
+
 export const updateUser = createAsyncThunk('updateUser', async(data : any , {rejectWithValue})=>{
     try {
         const userId = data.id;
@@ -163,6 +173,16 @@ const userSlice = createSlice({
             state.response = action.payload
             state.error = null;
         }).addCase(registerUser.rejected, (state,action)=>{
+            state.loading = false
+            state.response = []
+            state.error = action.payload
+        }).addCase(getUserById.pending, (state)=> {
+            state.loading = true;
+        }).addCase(getUserById.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.response = action.payload
+            state.error = null;
+        }).addCase(getUserById.rejected, (state,action)=>{
             state.loading = false
             state.response = []
             state.error = action.payload

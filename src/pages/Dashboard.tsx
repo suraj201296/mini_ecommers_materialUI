@@ -1,7 +1,7 @@
 import { Box, Button, Grid, TextField } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../state/hooks';
-import { getAllProducts } from '../slices/productSlice';
+import { getAllProducts, searchProducts } from '../slices/productSlice';
 import ProductCard from '../components/products/ProductCard';
 import SearchInput from '../components/FormComponents/SearchInput';
 
@@ -16,8 +16,9 @@ export type productType = {
 };
 
 export default function Dashboard() {
-  const productList = useAppSelector((state) => state.products);
+  const productList = useAppSelector((state) => state.products.product);
   const { response } = productList;
+
   const dispatch = useAppDispatch();
   const [user, setUser] = useState();
   const [products, setProducts] = useState([]);
@@ -36,10 +37,11 @@ export default function Dashboard() {
     if (response && response.statusCode === 200) {
         setProducts(response.data);
     }
-  }, [response]);
+  }, [response,searchProducts]);
 
   const handleSearch = (searchItem:  string) => {
       console.log(searchItem);
+      dispatch(searchProducts(searchItem));
   };
   
 

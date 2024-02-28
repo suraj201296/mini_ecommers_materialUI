@@ -10,7 +10,8 @@ import { getUserList, updateUser } from '../../slices/userSlice';
 type propsType  = {
     selectedUser : {
         id : number,
-        name : string,
+        firstName : string,
+        lastName : string,
         email : string,
         status : boolean,
         role : string
@@ -18,10 +19,11 @@ type propsType  = {
 }
 
 export default function UserForm({selectedUser} : propsType) {
-    const { id , name, email , role ,status } = selectedUser;
+    const { id ,firstName,lastName, email , role ,status } = selectedUser;
     const [form, setForm] = React.useState({
         id : id,
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         role: role,
         status : status
@@ -101,7 +103,8 @@ export default function UserForm({selectedUser} : propsType) {
         <Box padding={3}>
             <form onSubmit={handleUpdate}>
                 <Box>
-                    <CustomInput label='Name' name='name' id='name' value={form.name} handleChangeEvent={handleChange}/>
+                    <CustomInput label='First Name' name='firstName' id='firstName' value={form.firstName} handleChangeEvent={handleChange}/>
+                    <CustomInput label='Last Name' name='lastName' id='lastName' value={form.lastName} handleChangeEvent={handleChange}/>
                     <CustomInput label='Email' name='email' id='email' value={form.email} handleChangeEvent={handleChange}/>
                     <CustomSelect label='Role' id='role' name='role' list={roleList} selectedValue={form.role} handleSelectChangeEvent={handleSelectChange}/>
                     <CustomSelect label='Status' id='status' name='status' list={statusList} selectedValue={form.status} handleSelectChangeEvent={handleSelectChange}/>

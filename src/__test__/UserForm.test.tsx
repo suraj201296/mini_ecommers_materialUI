@@ -11,7 +11,8 @@ describe('UserForm component', ()=>{
 
     const mockUser = {
         id: 1,
-        name: 'suraj kamble',
+        firstName: 'suraj',
+        lastName : 'kamble',
         email: 'suraj@123.com',
         status: true,
         role: 'user',

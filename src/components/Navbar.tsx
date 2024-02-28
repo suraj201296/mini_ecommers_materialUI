@@ -8,6 +8,7 @@ import {
   Tab,
   Tabs,
   Divider,
+  Badge,
 } from '@mui/material';
 
 import * as React from 'react';
@@ -19,20 +20,22 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../state/hooks';
 import { logoutUser } from '../slices/userSlice';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 type Props = {
   onLogout: () => void;
 };
 
 const pages = ['home', 'clothes', 'shoes', 'sunglasses', 'makeup','users'];
-const settings = ['Profile', 'Logout'];
+const settings = ['Profile', 'Wishlist','Logout'];
 
 export default function Navbar({ onLogout }: Props) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -44,6 +47,7 @@ export default function Navbar({ onLogout }: Props) {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -62,15 +66,22 @@ export default function Navbar({ onLogout }: Props) {
   };
 
   const handleSetting = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.currentTarget.innerText == 'Logout') {
-      handleLogout();
+    let choice = event.currentTarget.innerText;
+    switch (choice) {
+      case 'Logout':
+          handleLogout();
+        break;
+      case 'Profile':
+          navigate('/viewProfile');
+        break;
+      default:
+        break;
     }
   };
 
   // =======================================================================
 
   // const [activeTab, setActiveTab] = useState();
-
   return (
     <AppBar position="sticky" sx={{ backgroundColor : 'darkblue'}}>
       <Container maxWidth="xl">
@@ -180,6 +191,17 @@ export default function Navbar({ onLogout }: Props) {
 
           {/* profile and logout setting button start */}
           <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Cart Items">
+              <IconButton sx={{ marginRight : '20px'}}>
+                <Badge
+                  badgeContent={5}
+                  color="error"
+                  sx={{ position: 'absolute', top: '-4px', right: '0px' }}
+                >
+                  <ShoppingCartIcon sx={{ color: 'white'}} />
+                </Badge>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/images/suraj.jpeg" />
@@ -202,7 +224,7 @@ export default function Navbar({ onLogout }: Props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting, index) => (
-                <MenuItem key={index} onClick={handleCloseUserMenu}>
+                <MenuItem key={index} onClick={handleCloseUserMenu} sx={{ width : '100px'}}>
                   <Typography textAlign="center">
                     <span onClick={handleSetting}>{setting}</span>
                   </Typography>

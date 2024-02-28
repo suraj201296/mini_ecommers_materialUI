@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import { IconButton } from '@mui/material';
 
 type Props = {
   handleSearch: (searchItem: string) => void;
@@ -27,12 +28,12 @@ export default function SearchInput({ handleSearch }: Props) {
         type='text'
         autoComplete='off'
         onChange={handleChange}
-        name='search'
-        placeholder='Search here what you want'
+        name='search_input'
+        placeholder='Search for Products, Brands and More'
         style={{
           width: '100%',
           height: '40px',
-          padding: '5px 20px',
+          padding: '5px 5px 5px 45px',
           margin: '5px',
           border: 'none',
           boxShadow: '0px 0px 5px 0px grey',
@@ -42,19 +43,18 @@ export default function SearchInput({ handleSearch }: Props) {
           fontSize: '16px',
         }}
       />
-      <SearchIcon
-        sx={{
-          backgroundColor: 'darkblue',
-          color: 'white',
-          padding: '10px',
-          borderRadius: '50px',
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          right: '-41px',
-          cursor: 'pointer',
-        }}
-      />
+        <SearchIcon
+          sx={{
+            color: 'grey',
+            padding: '10px',
+            borderRadius: '50px',
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            left: '10px',
+            cursor: 'pointer',
+          }}
+        />
     </form>
   );
 }
